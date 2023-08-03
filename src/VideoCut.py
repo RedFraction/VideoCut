@@ -387,8 +387,8 @@ class LayoutWindow(QWidget):
             self.ui_Slider.blockSignals(False)
 
     def setSliderTicks(self, ticks):
-        self.ui_Slider.setSingleStep(ticks)
-        self.ui_Slider.setPageStep(ticks * 2)
+        self.ui_Slider.setSingleStep(int(ticks/100))
+        self.ui_Slider.setPageStep(int(ticks/50))
 
     def setGotoFieldMaximum(self, count):
         self.ui_GotoField.blockSignals(True)
@@ -488,7 +488,7 @@ class LayoutWindow(QWidget):
     def enableUserActions(self, enable):
         self.ui_Dial.setEnabled(enable)
         self.ui_Slider.setEnabled(enable)
-        self.gotoAction.setEnabled(enable)
+        # self.gotoAction.setEnabled(enable)
         self.ui_GotoField.setEnabled(enable)
 
     def updateProgressBar(self, percent):
@@ -582,7 +582,7 @@ class MainFrame(QtWidgets.QMainWindow):
         self.infoAction.triggered.connect(self.showCodecInfo)
 
         self.playAction = QtWidgets.QAction(QtGui.QIcon(ICOMAP.ico("playStart")), get_lang_str("init_ui.play-pause"), self)
-        self.playAction.setShortcut('Ctrl+P')
+        self.playAction.setShortcut('Space')
         self.playAction.triggered.connect(self.playVideo)
 
         self.photoAction = QtWidgets.QAction(QtGui.QIcon(ICOMAP.ico("photoAction")), get_lang_str("init_ui.screenshot"),
@@ -861,7 +861,7 @@ class MainFrame(QtWidgets.QMainWindow):
         self.enableControls(enable)
         self.loadAction.setEnabled(enable)
         self.saveAction.setEnabled(enable)
-        self._widgets.gotoAction.setEnabled(enable)
+        # self._widgets.gotoAction.setEnabled(enable)
 
     def __getInfoDialog(self, text):
         dlg = QtWidgets.QDialog(self)
@@ -1732,7 +1732,7 @@ class VideoControl(QtCore.QObject):
         index = self.player.getCurrentFrameNumber()
         path = self.currentPath + str(int(index)) + '.jpg'
         if self.player.takeScreenShot(path):
-            self.gui.getMessageDialog(get_lang_str("video_control.screenshot-saved") + path).show()
+            self.gui.getMessageDialog(get_lang_str("video_control.screenshot-saved"), path).show()
 
     def toggleVideoPlay(self):
         if self.streamData is None:
