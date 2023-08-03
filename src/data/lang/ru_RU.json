@@ -23,7 +23,9 @@
         "play-pause": "Играть/Остановить видео",
         "output-settings": "Настройки вывода",
         "lang-settings": "Языковые настройки субтитров",
-        "file": "Файл",
+        "file_label": "Файл",
+        "video_label": "Видео",
+        "settings_label": "Настройки",
 
         "settings": {
             "reencode": "Перекодировка (Медленно!)",

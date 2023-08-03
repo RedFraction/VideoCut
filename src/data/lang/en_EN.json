@@ -15,7 +15,9 @@
         "play-pause": "Play video",
         "output-settings": "Output settings",
         "lang-settings": "Language settings",
-        "file": "File",
+        "file_label": "File",
+        "video_label": "Video",
+        "settings_label": "Settings",
 
         "settings": {
             "reencode": "Reencode (Slow!)",

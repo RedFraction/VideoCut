@@ -562,15 +562,15 @@ class MainFrame(QtWidgets.QMainWindow):
         self.exitAction.triggered.connect(QApplication.quit)
 
         self.loadAction = QtWidgets.QAction(QtGui.QIcon(ICOMAP.ico("loadAction")), get_lang_str("init_ui.open"), self)
-        self.loadAction.setShortcut('Ctrl+L')
+        self.loadAction.setShortcut('Ctrl+O')
         self.loadAction.triggered.connect(self.loadFile)
 
         self.startAction = QtWidgets.QAction(QtGui.QIcon(ICOMAP.ico("startAction")), get_lang_str("init_ui.include-from"), self)
-        self.startAction.setShortcut('Ctrl+G')
+        self.startAction.setShortcut('Ctrl+[')
         self.startAction.triggered.connect(self._videoController.addStartMarker)
 
         self.stopAction = QtWidgets.QAction(QtGui.QIcon(ICOMAP.ico("stopAction")), get_lang_str("init_ui.include-to"), self)
-        self.stopAction.setShortcut('Ctrl+H')
+        self.stopAction.setShortcut('Ctrl+]')
         self.stopAction.triggered.connect(self._videoController.addStopMarker)
 
         self.saveAction = QtWidgets.QAction(QtGui.QIcon(QtGui.QIcon(ICOMAP.ico("saveAction"))), get_lang_str("init_ui.save"), self)
@@ -608,28 +608,48 @@ class MainFrame(QtWidgets.QMainWindow):
         '''
         toolbar defs
         '''
-        self.toolbar = self.addToolBar('Main')
-        self.toolbar.addAction(self.loadAction)
-        self.toolbar.addAction(self.saveAction)
-        self.toolbar.addSeparator()
-        self.toolbar.addAction(self.startAction)
-        self.toolbar.addAction(self.stopAction)
-        self.toolbar.addSeparator()
-        self.toolbar.addAction(self.photoAction)
-        self.toolbar.addAction(self.infoAction)
-        self.toolbar.addAction(self.playAction)
-        self.toolbar.addAction(self.mediaSettings)
-        self.toolbar.addAction(self.langSettings)
+        self.spacer = QtWidgets.QWidget()
+        self.spacer.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        self.spacer2 = QtWidgets.QWidget()
+        self.spacer2.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
-        menubar = self.menuBar()
-        fileMenu = menubar.addMenu(f'&{get_lang_str("init_ui.file")}')
+
+
+        self.fileToolbar = self.addToolBar('File')
+        self.fileToolbar.addActions((self.loadAction,self.saveAction))
+
+        self.playCutToolbar = self.addToolBar('Play/Cut/Settings')
+        self.playCutToolbar.addWidget(self.spacer)
+        self.playCutToolbar.addActions((self.playAction,self.startAction,self.stopAction))
+
+        self.settingsToolbar = self.addToolBar('Settings')
+        self.settingsToolbar.addWidget(self.spacer2)
+        self.settingsToolbar.addActions((self.infoAction,self.photoAction,self.langSettings, self.mediaSettings))
+
+        '''
+        topbar menus defs
+        '''
+
+        self.menubar = self.menuBar()
+
+        fileMenu = self.menubar.addMenu(f'&{get_lang_str("init_ui.file_label")}')
         fileMenu.addAction(self.loadAction)
         fileMenu.addAction(self.saveAction)
         fileMenu.addSeparator()
-        fileMenu.addAction(self.startAction)
-        fileMenu.addAction(self.stopAction)
-        fileMenu.addSeparator()
         fileMenu.addAction(self.exitAction)
+
+        videoMenu = self.menubar.addMenu(f'&{get_lang_str("init_ui.video_label")}')
+        videoMenu.addAction(self.playAction)
+        videoMenu.addSeparator()
+        videoMenu.addAction(self.startAction)
+        videoMenu.addAction(self.stopAction)
+        videoMenu.addSeparator()
+        videoMenu.addAction(self.photoAction)
+        videoMenu.addSeparator()
+        videoMenu.addAction(self.infoAction)
+        videoMenu.addAction(self.langSettings)
+        videoMenu.addSeparator()
+        videoMenu.addAction(self.mediaSettings)
 
         widgets = LayoutWindow(self.settings)
         self.setCentralWidget(widgets)
@@ -709,12 +729,14 @@ class MainFrame(QtWidgets.QMainWindow):
 
     def startProgress(self):
         self._widgets.startProgress()  # only the bar.
-        self.toolbar.setEnabled(False)
+        self.fileToolbar.setEnabled(False)
+        self.fileToolbar.setEnabled(False)
+        self.fileToolbar.setEnabled(False)
         self._widgets.enableUserActions(False)
 
     def stopProgress(self):
         self._widgets.stopProgress()
-        self.toolbar.setEnabled(True)
+        self.fileToolbar.setEnabled(True)
         self._widgets.enableUserActions(True)
 
     def showWarning(self, aMessage):
